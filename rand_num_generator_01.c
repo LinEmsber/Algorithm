@@ -1,4 +1,6 @@
-/* Using rand() to generate a random integer number array */
+/* Random Number Generator, RNG.
+ * Using rand() to generate a random integer number array
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
