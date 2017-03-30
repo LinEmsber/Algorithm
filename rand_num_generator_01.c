@@ -7,17 +7,29 @@
 #include <string.h>
 #include <time.h>
 
-/* generate a random number array in a specific range
+
+/* A safe free function.  */
+void _safe_free(void **pp)
+{
+        if (pp != NULL && *pp != NULL){
+                free(*pp);
+                *pp = NULL;
+        }
+}
+#define safe_free(p) _safe_free( (void**) &p )
+
+
+/* A random number generator with integer data tyep and in a specific range.
  *
- * @len: the length of array
- * @start: the start number of array
- * @end: the end number of array
+ * @len: The length of array.
+ * @max: The max value of array.
+ * @min: The min value of array.
  */
-int * rn_arr_gen( int len , int start, int end)
+int * rand_num_generator_int( int len , int max, int min)
 {
         int i;
         int * ret_arr = NULL;
-        int range = start - end;
+        int range = max - min;
 
         // memroy allocation
         ret_arr = (int *) malloc( len * sizeof(int) );
@@ -27,23 +39,12 @@ int * rn_arr_gen( int len , int start, int end)
         srand( (unsigned) time(NULL) );
 
         // generate arr
-        for ( i = 0; i < len; i++ ){
-                *(ret_arr + i) = (rand() % range) + 1;
-        }
+        for ( i = 0; i < len; i++ )
+                *(ret_arr + i) = (rand() % range) + max;
 
         return ret_arr;
 }
 
-/* a safe free function
- */
-void _safe_free(void **pp)
-{
-	if (pp != NULL && *pp != NULL){
-		free(*pp);
-		*pp = NULL;
-	}
-}
-#define safe_free(p) _safe_free( (void**) &p )
 
 /* print the array with specific lenght
  *
@@ -53,18 +54,20 @@ void _safe_free(void **pp)
 void print_arr(int *arr, int len)
 {
         int i;
-
-        for ( i = 0; i < len; i++){
+        
+        for ( i = 0; i < len; i++)
                 printf("%d ", *(arr + i) );
-        }
+
         printf("\n");
 }
 
 int main( int argc, char *argv[] )
 {
-        int * arr = rn_arr_gen( atoi(argv[1]), 10, 100 );
+        int n =  atoi(argv[1]);
 
-        print_arr( arr, atoi(argv[1]) );
+        int * arr = rand_num_generator_int( n, 128, 255 );
+
+        print_arr( arr, n );
 
         safe_free(arr);
 
