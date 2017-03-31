@@ -1,7 +1,5 @@
 /* Random Number Generator, RNG
- * Using /dev/urandom to generate a random number with data type uint8_t.
- *
- * The maximun length of number array is 255.
+ * Using /dev/urandom to generate a random number with data type int.
  *
  * Reference:
  * http://www.cs.yale.edu/homes/aspnes/pinewiki/C(2f)Randomization.html
@@ -14,19 +12,18 @@
 #include <stdint.h>
 
 /* random number generator, RNG.
- * generate 8 bits unsigned integer, range from 0 to 255.
  * This function allocate memory from heap, it is necessary to free it.
  */
-uint8_t * rand_num_generator_uint8(uint8_t len, uint8_t max, uint8_t min)
+int * rand_num_generator(int len, int max, int min)
 {
         int i;
         FILE * f;
 
-        uint8_t rand_val;
-        uint8_t * rand_val_array;
-        uint8_t range = max - min;
+        int rand_val;
+        int * rand_val_array;
+        int range = max - min;
 
-        rand_val_array = malloc( len * sizeof(uint8_t) );
+        rand_val_array = malloc( len * sizeof(int) );
 
         f = fopen("/dev/urandom", "r");
 
@@ -40,7 +37,7 @@ uint8_t * rand_num_generator_uint8(uint8_t len, uint8_t max, uint8_t min)
         return rand_val_array;
 }
 
-void print_arr(uint8_t *arr, int len)
+void print_arr(int *arr, int len)
 {
         int i;
 
@@ -53,9 +50,9 @@ void print_arr(uint8_t *arr, int len)
 int  main(int argc, char *argv[])
 {
         int n = atoi( argv[1] );
-        uint8_t * array;
+        int * array;
 
-        array = rand_num_generator_uint8(n, 255, 128);
+        array = rand_num_generator(n, 255, 128);
 
         print_arr(array, n);
 
