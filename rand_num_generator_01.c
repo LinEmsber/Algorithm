@@ -40,7 +40,7 @@ int * rand_num_generator_int( int len , int max, int min)
 
         // generate arr
         for ( i = 0; i < len; i++ )
-                *(ret_arr + i) = (rand() % range) + max;
+                *(ret_arr + i) = (rand() % range) + min;
 
         return ret_arr;
 }
@@ -54,7 +54,7 @@ int * rand_num_generator_int( int len , int max, int min)
 void print_arr(int *arr, int len)
 {
         int i;
-        
+
         for ( i = 0; i < len; i++)
                 printf("%d ", *(arr + i) );
 
