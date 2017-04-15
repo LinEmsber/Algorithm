@@ -1,4 +1,4 @@
-/* The simple algorithm for string increament. */
+/* The simple algorithm for string increment. */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,5 +20,5 @@ int main()
 		printf("string: %s\n", string);
 	}
 
-	return 0;	
+	return 0;
 }
