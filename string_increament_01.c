@@ -12,6 +12,7 @@ int main()
 
 	for (i = 0; i < 10000; i++){
 
+		/* The algorithm for string increment. */
 		for (j = 0; j < 7; j++){
 			string[j] ++;
 			string[j] = ( (string[j] - 65) % 52) + 65;
