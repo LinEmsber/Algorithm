@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define TIMES 64
+
 char ** string_increament(unsigned int _string_len)
 {
 	int i, j;
@@ -18,7 +20,7 @@ char ** string_increament(unsigned int _string_len)
 
 		for (j = 0; j < 7; j++){
 			string[j] ++;
-			string[j] = ( (string[j] - 65) % 52) + 65;
+			string[j] = ( (string[j] - 65) % 26) + 65;
 		}
 
 		strcpy(ptr_ptr_string[i], string);
@@ -41,12 +43,12 @@ void free_string(char ** _ptr_ptr_string, unsigned int _string_len)
 int main()
 {
 	int i;
-	char ** pp = string_increament(30);
+	char ** pp = string_increament(TIMES);
 
-	for (i = 0; i < 30; i++)
+	for (i = 0; i < TIMES; i++)
 		printf("string: %s\n", pp[i]);
 
-	free_string(pp, 30);
+	free_string(pp, TIMES);
 
 	return 0;
 }
