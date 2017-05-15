@@ -3,82 +3,81 @@
  * Given text string and pattern string in text[] and word[] respectively, these two routines will find
  * if the word[] string is somewhere in the text[] by using the linear Knuth-Morris-Pratt algorithm.
  *
- * USAGE: gcc -Wall -g KMP.c && ./a.out
+ * USAGE: gcc -Wall -g KMP_string_search_01.c && ./a.out
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#define MAX_SIZE  100
-
-
-// Given the pattern word[], setup builds up the failure function table fail[].
-void setup(char word[], int fail[])
+int * failure(char * word, int word_size)
 {
-	int i, j;
-	int word_length = strlen(word);
+	int i = 1;
+	int k = -1;
 
-	fail[0] = -1;
+	int * pi = malloc( sizeof(int) * word_size );
+	if (!pi)
+		return NULL;
 
-	for (i = 1; i < word_length; i++) {
-		for ( j = fail[i-1]; j >= 0 && word[j+1] != word[i]; j = fail[j])
-			;
-		fail[i] = (j < 0 && word[j+1] != word[i]) ? -1 : j+1;
+	pi[0] = k;
+
+	for (i = 1; i < word_size; i++) {
+
+		while (k > -1 && word[k+1] != word[i])
+			k = pi[k];
+
+		if (word[i] == word[k+1])
+			k++;
+
+		pi[i] = k;
 	}
+
+	return pi;
 }
 
-// The KMP pattern search routine.
-int KMP(char text[], char word[], int fail[])
+int kmp(char * text, int text_size, char * word, int word_size)
 {
-	int t, w;
-	int text_length = strlen(text);
-	int word_length = strlen(word);
+	int i;
+	int k = -1;
 
-	/* build up the fail func.  */
-	setup(word, fail);
+	int * pi = failure(word, word_size);
+	if (!pi)
+		return -1;
 
-	t = w = 0;
-	while ( t < text_length && w < word_length ){
+	for (i = 0; i < word_size; i++)
+		printf("pi[%d]: %d\n", i, pi[i]);
 
-		/* if not match*/
-		if (text[t] != word[w]){
+	for (i = 0; i < text_size; i++) {
 
-			/* is it the 1st location? */
-			if (w > 0){
-				/* no, shift right */
-				w = fail[w-1] + 1;
-			}else{
-				/* or match next in text[] */
-				t++;
-			}
+		/* If the mismatch of character comparison happen, we check the k for ensuring whether we use the
+		 * prefix array.
+		 */
+		while ( k > -1 && word[k+1] != text[i] )
+			k = pi[k];
 
-		}else{
-			/* matched, advance both */
-			t++, w++;
+		/* Find the matched char, continue to the next one. */
+		if (text[i] == word[k+1])
+			k++;
+
+		if (k == word_size - 1) {
+			free(pi);
+			return i-k;
 		}
 	}
 
-	return (w >= word_length) ? t - word_length : -1;
+	free(pi);
+	return -1;
 }
 
-
-int main()
+int main(int argc, const char *argv[])
 {
 	int i;
 	int KMP_result;
 
-	char * text = "ABC ABCDAB ABCDABCDABDE ABCDABDBB ABCDCCABCDDDAAA";
-	char * word = "ABCDCCABCD";
+	char text[] = "ABC ABCDAB ABCDABCDABDE ABCDABDBB ABCDABCDCCDDAAA";
+	char word[] = "ABCDABCDCC";
 
-	int word_length = strlen(word);
-	int fail[word_length];
-
-	printf("Knuth-Morris-Pratt String Search:\n");
-
-	KMP_result = KMP(text, word, fail);
-
-	for (i = 0; i < word_length; i++)
-		printf("fail[%d]: %d\n", i, fail[i]);
+	KMP_result = kmp(text, strlen(text), word, strlen(word));
 
 	if ( KMP_result >= 0 ) {
 
