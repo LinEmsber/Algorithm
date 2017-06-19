@@ -1,14 +1,13 @@
-/* The failure function of KMP algorithm.
+/* The failure function to build the KMP talbe for KMP algorithm.
  *
- * GDB: gcc -Wall -g KMP_failure_01.c && gdbtui ./a.out
+ * GDB: gcc -Wall -g KMP_table_02.c && gdbtui ./a.out
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* make Partial match table, also known as failure function */
-int * failure(char * word, int word_size)
+int * failure_function_1(char * word, int word_size)
 {
 	int i = 1;
 	int k = -1;
@@ -36,7 +35,7 @@ int * failure(char * word, int word_size)
 	return pi;
 }
 
-int * prefix_fun(char * word, int word_size)
+int * failure_function_2(char * word, int word_size)
 {
 	int i;
 	int k = 0;
@@ -52,35 +51,37 @@ int * prefix_fun(char * word, int word_size)
 
 		if (word[i] == word[k])
 			k++;
-		
+
 		pi[i] = k;
 	}
 
-	return word;
+	return pi;
 }
 
 int main()
 {
 	int i;
+	int * fail_1, * fail_2;
 	char * word = "ABCABCABOOBCDCC";
 
-	int * fail_1, * fail_2;
 	int word_length = strlen(word);
 
-	fail_1 = failure(word, word_length);
 	printf("word: %s\n", word);
 
+	/* method 1 */
+	fail_1 = failure_function_1(word, word_length);
+	printf("fail_1:");
 	for (i = 0; i < word_length; i++)
-		printf("fail_1[%d]: %d\n", i, fail_1[i]);
+		printf(" %d,", fail_1[i]);
+	printf("\n");
 
-
-	fail_2 = failure(word, word_length);
-	printf("word: %s\n", word);
-
+	/* method 2 */
+	fail_2 = failure_function_1(word, word_length);
+	printf("fail_2:");
 	for (i = 0; i < word_length; i++)
-		printf("fail_2[%d]: %d\n", i, fail_2[i]);
+		printf(" %d,", fail_2[i]);
+	printf("\n");
 
 
 	return 0;
 }
-
