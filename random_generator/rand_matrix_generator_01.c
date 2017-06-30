@@ -26,7 +26,7 @@ void _safe_free(void **pp)
  * @max: The max value of matrix.
  * @min: The min value of matrix.
  */
-int ** rand_num_generator_int( int row, int col, int max, int min)
+int ** rand_matrix_generator_int( int row, int col, int max, int min)
 {
         int i, j;
         int range = max - min;
@@ -85,7 +85,7 @@ int main( int argc, char *argv[] )
         int matrix_max_value =  atoi(argv[3]);
         int matrix_min_value =  atoi(argv[4]);
 
-        int ** matrix = rand_num_generator_int( matrix_row, matrix_col, matrix_max_value, matrix_min_value );
+        int ** matrix = rand_matrix_generator_int( matrix_row, matrix_col, matrix_max_value, matrix_min_value );
 
         print_matrix( matrix, matrix_row, matrix_col );
 
