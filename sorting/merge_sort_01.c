@@ -35,7 +35,7 @@ void merge_array(int *arr, int *L, int left_length, int *R, int right_length)
  * @arr: integer array
  * @len: length of array
  */
-void meger_sort(int *arr, int len)
+void merge_sort(int *arr, int len)
 {
         int i;                  // iteration
         int mid, *L, *R;        // middle element, left and right sub-array.
@@ -62,9 +62,9 @@ void meger_sort(int *arr, int len)
                 R[i-mid] = arr[i];
 
         // sorting the left subarray
-        meger_sort(L, mid);
+        merge_sort(L, mid);
         // sorting the right subarray
-        meger_sort(R, len-mid);
+        merge_sort(R, len-mid);
 
         // Merging L and R into arr as sorted list.
         merge_array(arr, L, mid, R, len-mid);
@@ -75,7 +75,6 @@ void meger_sort(int *arr, int len)
 
 int main()
 {
-
         int i;
         int array_len;
         int arr[] = {10, 2, 4, 5, 22, 898, 84, 12, 103, 331, 56};
@@ -84,7 +83,7 @@ int main()
         array_len = sizeof(arr) / sizeof(arr[0]);
 
         // Calling merge_array sort to sort the array.
-        meger_sort(arr, array_len);
+        merge_sort(arr, array_len);
 
         //printing all elements in the array once its sorted.
         for(i = 0; i < array_len; i++)
