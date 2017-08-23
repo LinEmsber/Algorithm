@@ -65,7 +65,7 @@ int main( int argc, char *argv[] )
 {
         int n =  atoi(argv[1]);
 
-        int * arr = rand_num_generator_int( n, 128, 255 );
+        int * arr = rand_num_generator_int( n, 255, 128 );
 
         print_arr( arr, n );
 
