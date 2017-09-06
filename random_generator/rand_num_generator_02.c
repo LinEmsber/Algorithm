@@ -18,8 +18,7 @@ int * rand_num_generator(int len, int max, int min)
 {
         int i;
         FILE * f;
-
-        int rand_val;
+        unsigned int rand_val;
         int * rand_val_array;
         int range = max - min;
 
@@ -30,6 +29,10 @@ int * rand_num_generator(int len, int max, int min)
         for (i = 0; i < len; i++){
                 fread(&rand_val, sizeof(rand_val), 1, f);
                 rand_val_array[i] = (rand_val % range) + min;
+
+                if (rand_val_array[i] < min){
+                        printf("Error\n");
+                }
         }
 
         fclose(f);
