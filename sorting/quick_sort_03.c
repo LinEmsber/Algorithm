@@ -60,20 +60,20 @@ void print_arr(int *arr, int len)
 	printf("\n");
 }
 
-void quick_sort(int arr[], int left, int right)
+int partition(int arr[], int left, int right)
 {
 	int i = left, j = right;
 	// int tmp;
 	int pivot = arr[(left + right) / 2];
 
-	/* Partition */
-	while (i <= j) {
+	/* partition */
+	while (i < j) {
 		while (arr[i] < pivot)
 			i++;
 		while (arr[j] > pivot)
 			j--;
 
-		if (i <= j) {
+		if (i < j) {
 			// tmp = arr[i];
 			// arr[i] = arr[j];
 			// arr[j] = tmp;
@@ -83,11 +83,18 @@ void quick_sort(int arr[], int left, int right)
 		}
 	}
 
-	/* Recursion */
-	if (left < j)
-		quick_sort(arr, left, j);
-	if (i < right)
-		quick_sort(arr, i, right);
+	return i;
+}
+
+
+void quick_sort(int arr[], int left, int right)
+{
+	int index = partition(arr, left, right);
+
+	if (left < index - 1)
+		quick_sort(arr, left, index - 1);
+	if (index < right)
+		quick_sort(arr, index, right);
 }
 
 
