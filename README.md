@@ -1,6 +1,7 @@
 # Algorithm
-- Bitwise
-- C_programming_trick
+- math
 - random_number_generator
+- search
 - sorting
+- string
 - others
