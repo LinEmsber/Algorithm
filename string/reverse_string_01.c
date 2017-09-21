@@ -1,32 +1,29 @@
-/* An example of reverse string function */
+/* An implementation of reversing string function. */
 
 #include <stdio.h>
 #include <string.h>
 
 #define XORSWAP(a, b)   ((&(a) == &(b)) ? (a) : ((a)^=(b),(b)^=(a),(a)^=(b)))
 
-/* reverse a string
- *
- * @s: the target string
- */
-int reverse_string(char *s)
+/* Reverse a string. */
+int reverse_string(char * s)
 {
-	if (!s)
-		return 1;
+	if ( NULL == s)
+		return -1;
 
 	char * start = s;
-
-	// find the last char position.
-	// char * end = s + strlen(s) - 1;
 	char * end = s;
-	while( end && *end)
+
+	/* Find the last char index. */
+	// end = s + strlen(s) - 1;
+	while( *end != '\0' )
 		++end;
 	--end;
-	
+
 	printf("address of str: %p\n", start);
 	printf("address of end: %p\n", end);
 
-	// reverse
+	/* Reverse. */
 	while( start < end ){
 		XORSWAP( *start, *end );
 		start++;
@@ -39,12 +36,21 @@ int reverse_string(char *s)
 
 int main()
 {
+	/* Declare a char array of size 7 and initialize it with the characters:
+	 * s,t,r,i,n,g and \0. You are allowed to modify the contents of this array.
+	 */
+	char ptr[] = "string";
 
-	char string[] = "This_is_a_string_which we want to modify.";
+	/* Declare ptr as a char pointer and initializes it with address of string
+	 * literal "string" which is read-only. Modifying a string literal is an
+	 * undefined behavior. What you saw(segmemtation fault) is one manifestation
+	 * of the undefined behavior.
+	 */
+	// char * ptr = "string";
 
-	printf("original str: %s\n", string);
-	reverse_string(string);
-	printf("modified str: %s\n", string);
+	printf("Original str: %s\n", ptr);
+	reverse_string(ptr);
+	printf("Reversed str: %s\n", ptr);
 
 	return 0;
 }
