@@ -1,61 +1,78 @@
+/* The simple implementation of Least Recently Used (LRU) cache.
+ *
+ * http://meansofmine.blogspot.tw/2011/04/c-program-to-implement-lru-page.html
+ */
+
 #include<stdio.h>
 
 int main()
 {
-	int q[20], p[50];
-	int c = 0, c1, f, i, j, k = 0, n, r, t;
-	int b[20],c2[20];
+	int pages_cache[20], pages_input[50];
+	int num_pages_fault = 0, page_cache_index = 0;
+	int page_cache_search_index, cache_block_size, i, j, num_pages_input, r, t;
+	int b[20], c2[20];
 
 
 	printf("Enter number of pages:");
-	scanf("%d",&n);
+	scanf("%d", &num_pages_input);
 
-	printf("Enter the reference string:");
-	for(i = 0; i < n; i++)
-		scanf("%d", &p[i]);
+	printf("Enter the integer array as sequence pages input:");
+	for(i = 0; i < num_pages_input; i++)
+		scanf("%d", &pages_input[i]);
 
-	printf("Enter number of frames:");
-	scanf("%d",&f);
+	printf("Enter number of cache block:");
+	scanf("%d", &cache_block_size);
 
-	q[k]=p[k];
-	printf("\n\t%d\n",q[k]);
-	c++;
-	k++;
+	pages_cache[page_cache_index] = pages_input[page_cache_index];
+	printf("\n\t%d\n", pages_cache[page_cache_index]);
+	num_pages_fault++;
+	page_cache_index++;
 
-	for(i = 1; i < n; i++) {
-		c1=0;
-		for(j = 0; j < f; j++) {
-			if(p[i] != q[j])
-				c1++;
+	for(i = 1; i < num_pages_input; i++) {
+		page_cache_search_index = 0;
+
+		/* Search the pages from the cache. */
+		for(j = 0; j < cache_block_size; j++) {
+			if(pages_input[i] != pages_cache[j]){
+				page_cache_search_index++;
+			}
 		}
 
-		if(c1 == f) {
-			c++;
-			if(k < f) {
-				q[k] = p[i];
-				k++;
-				for(j = 0; j < k; j++)
-					printf("\t%d",q[j]);
+		/* If we cannot find the target page on the cache. */
+		if(page_cache_search_index == cache_block_size) {
+			num_pages_fault++;
+
+			/* If the cache is not full, we store this page into the cache. */
+			if(page_cache_index < cache_block_size) {
+				pages_cache[page_cache_index] = pages_input[i];
+				page_cache_index++;
+				for(j = 0; j < page_cache_index; j++)
+					printf("\t%d", pages_cache[j]);
 				printf("\n");
 			}
+
+			/* If the cache is full. */
 			else {
-				for(r = 0; r < f; r++) {
+				/* Search the target page from the cache. */
+				for(r = 0; r < cache_block_size; r++) {
 					c2[r] = 0;
 
-					for(j = i-1; j < n; j--) {
-						if(q[r] != p[j])
+					for(j = i-1; j < num_pages_input; j--) {
+						if(pages_cache[r] != pages_input[j])
 							c2[r]++;
 						else
 							break;
 					}
 				}
 
-				for(r = 0; r < f; r++){
+				/* Copy the cache to tmp array. */
+				for(r = 0; r < cache_block_size; r++){
 					b[r] = c2[r];
 				}
 
-				for(r = 0; r < f; r++) {
-					for(j = r; j < f; j++) 	{
+				/* Find the victim to remove it from the cache. */
+				for(r = 0; r < cache_block_size; r++) {
+					for(j = r; j < cache_block_size; j++) 	{
 						if(b[r] < b[j]) {
 							t = b[r];
 							b[r] = b[j];
@@ -64,18 +81,24 @@ int main()
 					}
 				}
 
-				for(r = 0; r < f;r++)  {
-					if(c2[r] == b[0])
-						q[r] = p[i];
+				for(r = 0; r < cache_block_size;r++)  {
+					if(c2[r] == b[0]){
+						pages_cache[r] = pages_input[i];
+					}
 
-					printf("\t%d",q[r]);
+					printf("\t%d", pages_cache[r]);
 				}
 				printf("\n");
 			}
 		}
+
+		/* Page hit. */
+		else{
+			printf("Page hit.\n");
+		}
 	}
-	
-	printf("\nThe number of page faults is %d\n",c);
+
+	printf("\nThe number of page faults is %d\num_pages_input", num_pages_fault);
 
 	return 0;
 }
