@@ -3,93 +3,80 @@
  * http://meansofmine.blogspot.tw/2011/04/c-program-to-implement-lru-page.html
  */
 
-#include<stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define PAGE_CACHE_MAX_SIZE 5
+#define PAGE_INPUT_MAX_SIZE 20
 
 int main()
 {
-	int pages_cache[20], pages_input[50];
-	int num_pages_fault = 0, page_cache_index = 0;
-	int page_cache_search_index, cache_block_size, i, j, num_pages_input, r, t;
-	int b[20], c2[20];
+	int pages_cache[PAGE_CACHE_MAX_SIZE] = {0}, pages_cache_backup[PAGE_CACHE_MAX_SIZE] = {0}, pages_cache_2[PAGE_CACHE_MAX_SIZE] = {0};
+	int pages_input_array[PAGE_INPUT_MAX_SIZE] = {0};
 
+	int page_fault_times = 0, page_cache_index = 0;
+	int page_cache_search_index, cache_size, num_pages_size;
+	int i, j, r, t;
 
-	printf("Enter number of pages:");
-	scanf("%d", &num_pages_input);
+	printf("Enter number of pages (max: %d):", PAGE_INPUT_MAX_SIZE);
+	scanf("%d", &num_pages_size);
+	if (num_pages_size > PAGE_INPUT_MAX_SIZE)
+		return EXIT_FAILURE;
 
 	printf("Enter the integer array as sequence pages input:");
-	for(i = 0; i < num_pages_input; i++)
-		scanf("%d", &pages_input[i]);
+	for(i = 0; i < num_pages_size; i++)
+		scanf("%d", &pages_input_array[i]);
 
-	printf("Enter number of cache block:");
-	scanf("%d", &cache_block_size);
+	printf("Enter number of cache block (max: %d):", PAGE_CACHE_MAX_SIZE);
+	scanf("%d", &cache_size);
+	if (cache_size > PAGE_CACHE_MAX_SIZE)
+		return EXIT_FAILURE;
 
-	pages_cache[page_cache_index] = pages_input[page_cache_index];
-	printf("\n\t%d\n", pages_cache[page_cache_index]);
-	num_pages_fault++;
+	/* Print the first page in the cache. */
+	pages_cache[0] = pages_input_array[0];
+	/* Print the elements of cache. */
+	for(j = 0; j < cache_size; j++)
+		printf("\t%d", pages_cache[j]);
+	printf("\n");
+	page_fault_times++;
 	page_cache_index++;
 
-	for(i = 1; i < num_pages_input; i++) {
+	/* Start the LRU cache algorithm. */
+	for(i = 1; i < num_pages_size; i++) {
 		page_cache_search_index = 0;
 
 		/* Search the pages from the cache. */
-		for(j = 0; j < cache_block_size; j++) {
-			if(pages_input[i] != pages_cache[j]){
+		for(j = 0; j < cache_size; j++) {
+			if(pages_input_array[i] != pages_cache[j]){
 				page_cache_search_index++;
 			}
 		}
 
 		/* If we cannot find the target page on the cache. */
-		if(page_cache_search_index == cache_block_size) {
-			num_pages_fault++;
+		if(page_cache_search_index == cache_size) {
+			page_fault_times++;
 
 			/* If the cache is not full, we store this page into the cache. */
-			if(page_cache_index < cache_block_size) {
-				pages_cache[page_cache_index] = pages_input[i];
+			if(page_cache_index < cache_size) {
+				pages_cache[page_cache_index] = pages_input_array[i];
 				page_cache_index++;
-				for(j = 0; j < page_cache_index; j++)
-					printf("\t%d", pages_cache[j]);
-				printf("\n");
+
 			}
 
-			/* If the cache is full. */
+			/* If the cache is full, we need to find a victim. */
 			else {
-				/* Search the target page from the cache. */
-				for(r = 0; r < cache_block_size; r++) {
-					c2[r] = 0;
 
-					for(j = i-1; j < num_pages_input; j--) {
-						if(pages_cache[r] != pages_input[j])
-							c2[r]++;
-						else
-							break;
-					}
+				for(j = cache_size - 1; j > 0 ; j--){
+					pages_cache[j] = pages_cache[j-1];
 				}
+				pages_cache[0] = pages_input_array[i];
 
-				/* Copy the cache to tmp array. */
-				for(r = 0; r < cache_block_size; r++){
-					b[r] = c2[r];
-				}
-
-				/* Find the victim to remove it from the cache. */
-				for(r = 0; r < cache_block_size; r++) {
-					for(j = r; j < cache_block_size; j++) 	{
-						if(b[r] < b[j]) {
-							t = b[r];
-							b[r] = b[j];
-							b[j] = t;
-						}
-					}
-				}
-
-				for(r = 0; r < cache_block_size;r++)  {
-					if(c2[r] == b[0]){
-						pages_cache[r] = pages_input[i];
-					}
-
-					printf("\t%d", pages_cache[r]);
-				}
-				printf("\n");
 			}
+
+			/* Print the elements of cache. */
+			for(j = 0; j < cache_size; j++)
+				printf("\t%d", pages_cache[j]);
+			printf("\n");
 		}
 
 		/* Page hit. */
@@ -98,7 +85,7 @@ int main()
 		}
 	}
 
-	printf("\nThe number of page faults is %d\num_pages_input", num_pages_fault);
+	printf("\nThe number of page faults is %d\n", page_fault_times);
 
 	return 0;
 }
