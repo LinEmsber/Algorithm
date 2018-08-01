@@ -1,5 +1,6 @@
 /* Prim's Minimum Spanning Tree (MST) algorithm.
  * The program is for adjacency matrix representation of the graph.
+ * Reference: https://www.geeksforgeeks.org/greedy-algorithms-set-5-prims-minimum-spanning-tree-mst-2/
  */
 
 #include <stdio.h>
@@ -38,13 +39,14 @@ void prim_MST(int graph[NUM_V][NUM_V])
 	int parent[NUM_V];
 	int key[NUM_V];
 
-	parent[0] = -1;
-
+	/* Initialize all distances as infinite and MST_set[] as false. */
 	for (int i = 0; i < NUM_V; i++){
 		key[i] = INT_MAX;
 		MST_set[i] = false;
 	}
+
 	key[0] = 0;
+	parent[0] = -1;
 
 	for (int count = 0; count < NUM_V - 1; count++) {
 		/* Pick the minimum key vertex from the set of vertices not yet included in MST. */
